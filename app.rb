@@ -38,5 +38,12 @@ end
 post '/new' do
 	@post = params[:post]
 
+	if @post.length <= 0
+		@error = 'Enter you text'
+		return erb :new
+	end
+
+	@db.execute 'Insert into post (post,created_date) values (?, datetime())', [@post]
+
 	erb  "You wrote #{@post}"
 end
