@@ -1,0 +1,30 @@
+<h3><i>Post details</i></h3>
+<br />
+<br />
+
+
+<p>
+  <%= @row['post'] %>
+  <br />
+  <br />
+  Added at <%= @row['created_date'] %>
+  <br />
+  <br />
+<h4>Add comment</h4>
+<p>
+<form action="/details/<%= @row['id'] %>" method="post">
+  <div class="mb-3">
+    <textarea name="post" class="form-control" id="exampleFormControlTextarea1" rows="6" placeholder="Leave you comnent here..."></textarea>
+  </div>
+  <br />
+  <button type="submit" class="btn btn-success">Add comment</button>
+</form>
+</p>
+</p>
+<% if @results_comm %>
+<% @results_comm.each do |comm| %>
+<div style="width: 400px" class="alert alert-info" role="alert">
+<h5><%= comm['post'] %> </h5><i> <%= comm['created_date'] %></i>
+</div>
+<% end %>
+<% end %>

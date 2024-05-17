@@ -17,12 +17,22 @@ end
 configure do
 	init_db
 
-	# Creating a table if it is not exists
+	# Creating POST table if it is not exists
 	@db.execute 'CREATE TABLE IF NOT EXISTS
 	post
 	(id	INTEGER,
 		created_date	DATE,
 		post	TEXT,
+		PRIMARY KEY(id AUTOINCREMENT)
+	)'
+
+	# Creating a table if it is not exists for COMMENTS
+	@db.execute 'CREATE TABLE IF NOT EXISTS
+	comment
+	(id	INTEGER,
+		created_date	DATE,
+		post	TEXT,
+		post_id integer,
 		PRIMARY KEY(id AUTOINCREMENT)
 	)'
 end
@@ -54,13 +64,28 @@ post '/new' do
 	redirect to '/index'
 end
 
-get '/details/:mess' do
-	post_id = params[:mess]
+get '/details/:mess_id' do
+
+	# Get variable from url
+	post_id = params[:mess_id]
 
 	results = @db.execute 'select * from post where id = ?', [post_id]
 	@row = results[0]
 
-	erb 'Must show posts for <b>' + post_id.to_s + '</b>'
+	@results_comm = @db.execute 'select * from comment where post_id = ?', [post_id]
 
+
+	# Return data to detail.erb
 	erb :details
+end
+
+post '/details/:mess_id' do
+	# Get url
+	post_id = params[:mess_id]
+	# Get post from the form
+	content = params[:post]
+
+	@db.execute 'Insert into comment (post, created_date,post_id) values (?, datetime(), ?)', [content, post_id]
+
+	redirect to '/details/' + post_id
 end
