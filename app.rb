@@ -27,8 +27,14 @@ configure do
 	)'
 end
 
-get '/' do
-	erb "Hello! <a href=\"https://github.com/bootstrap-ruby/sinatra-bootstrap\">Original</a> pattern has been modified for <a href=\"http://rubyschool.us/\">Ruby School</a>"
+# Function to receive results
+def get_results
+	@results = @db.execute 'select * from post order by id desc'
+end
+get '/index' do
+	get_results
+
+	erb :index
 end
 
 get '/new' do
@@ -44,6 +50,17 @@ post '/new' do
 	end
 
 	@db.execute 'Insert into post (post,created_date) values (?, datetime())', [@post]
+	get_results
+	redirect to '/index'
+end
 
-	erb  "You wrote #{@post}"
+get '/details/:mess' do
+	post_id = params[:mess]
+
+	results = @db.execute 'select * from post where id = ?', [post_id]
+	@row = results[0]
+
+	erb 'Must show posts for <b>' + post_id.to_s + '</b>'
+
+	erb :details
 end
