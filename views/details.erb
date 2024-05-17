@@ -2,25 +2,32 @@
 <br />
 <br />
 
-
+<!--# Display a single post-->
 <p>
   <%= @row['post'] %>
   <br />
   <br />
-  Added at <%= @row['created_date'] %>
+  <div style="font-size: 80%; color: #999999">created <%= @row['created_date'] %></div>
   <br />
   <br />
 <h4>Add comment</h4>
-<p>
+
+<!--# Form for comments-->
+
 <form action="/details/<%= @row['id'] %>" method="post">
   <div class="mb-3">
-    <textarea name="post" class="form-control" id="exampleFormControlTextarea1" rows="6" placeholder="Leave you comnent here..."></textarea>
+    <textarea name="comment" class="form-control" id="exampleFormControlTextarea1" rows="6" placeholder="Leave you comnent here..."></textarea>
   </div>
   <br />
   <button type="submit" class="btn btn-success">Add comment</button>
 </form>
-</p>
-</p>
+<br />
+<br />
+
+<!--# End of form for comments-->
+
+<!--# Displaying comments-->
+
 <% if @results_comm %>
 <% @results_comm.each do |comm| %>
 <div style="width: 400px" class="alert alert-info" role="alert">

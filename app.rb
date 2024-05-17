@@ -41,7 +41,8 @@ end
 def get_results
 	@results = @db.execute 'select * from post order by id desc'
 end
-get '/index' do
+
+get '/' do
 	get_results
 
 	erb :index
@@ -72,7 +73,7 @@ get '/details/:mess_id' do
 	results = @db.execute 'select * from post where id = ?', [post_id]
 	@row = results[0]
 
-	@results_comm = @db.execute 'select * from comment where post_id = ?', [post_id]
+	@results_comm = @db.execute 'select * from comment where post_id = ? order by id desc', [post_id]
 
 
 	# Return data to detail.erb
@@ -80,11 +81,19 @@ get '/details/:mess_id' do
 end
 
 post '/details/:mess_id' do
-	# Get url
+	# Get mess id from url
 	post_id = params[:mess_id]
-	# Get post from the form
-	content = params[:post]
+	# Get message from the form
+	content = params[:comment]
 
+	# Validating for empty post
+
+	if content.length <= 0
+		@error = 'Enter comments'
+
+		redirect to '/details/' + post_id
+
+	end
 	@db.execute 'Insert into comment (post, created_date,post_id) values (?, datetime(), ?)', [content, post_id]
 
 	redirect to '/details/' + post_id
