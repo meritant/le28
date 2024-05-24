@@ -62,7 +62,7 @@ post '/new' do
 
 	@db.execute 'Insert into post (post,created_date) values (?, datetime())', [@post]
 	get_results
-	redirect to '/index'
+	redirect to '/'
 end
 
 get '/details/:mess_id' do
